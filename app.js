@@ -6,9 +6,9 @@ function switchWith (numbers, diffrence, outputSet) {
     var i, j;
     for(i = 0; i < outputSet.length; i++){
         for(j = 0; j < numbers.length; j++){
-            if(outputSet[i] < parseInt(numbers[j]) && parseInt(numbers[j]) - outputSet[i] <= diffrence){
-                diffrence -= parseInt(numbers[j]) - outputSet[i];
-                outputSet[i] = parseInt(numbers[j]);
+            if(outputSet[i] < numbers[j] && numbers[j] - outputSet[i] <= diffrence){
+                diffrence -= numbers[j] - outputSet[i];
+                outputSet[i] = numbers[j];
             }
             if(diffrence == 0){
                 return outputSet;
@@ -33,22 +33,25 @@ app.get('/numbers', (req, res, next) => {
     len = parseInt(len);
     if(isNaN(avg)){
         res.status(400).json({
-            numbers : "bad request : averag is invalid input"
+            numbers : "bad request : average is invalid input"
         });
     }
     var i = 0, sum = 0, target = parseInt(len * avg);
     var output = new Array();
-    
     while (output.length < len){
-	    if(sum + parseInt(numbersSet[i]) <= target){
-	        output.push(parseInt(numbersSet[i]));
-	        sum += parseInt(numbersSet[i++]);
-	    }
         if(i == numbersSet.length)
 	        i = 0;
+        if(sum + numbersSet[i] <= target){
+	        output.push(numbersSet[i]);
+	        sum += numbersSet[i];
+        }
+        if(sum == target && output.length < len){
+            output.pop();
+        }
+        i++;
     }
     
-    if(sum != (len * avg)){
+    if(sum != target){
 	    output = switchWith(numbersSet, target - sum, output);
     }
     if(output == null){ 
