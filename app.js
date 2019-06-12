@@ -20,9 +20,11 @@ function switchWith (numbers, diffrence, outputSet) {
 
 app.get('/numbers', (req, res, next) => {
     var len = req.query.length, 
-        numbersSet = req.query.numbersset, 
+        numbersSetString = req.query.numbersset, 
         avg = req.query.average;
      
+    var numbersSet = numbersSetString.substring(1,numbersSetString.length - 1).split(",").map(Number)
+
     if(!Array.isArray(numbersSet)){
         res.status(400).json({
             numbers : "bad request : array is invalid input"
